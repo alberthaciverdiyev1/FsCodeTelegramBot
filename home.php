@@ -36,33 +36,36 @@ $postData = array(
 
 $ch = curl_init($url);
 
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); 
-curl_setopt($ch, CURLOPT_POST, true); 
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData)); 
+curl_setopt_array($ch, array(
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => http_build_query($postData)
+)
+);
 
 $response = curl_exec($ch);
-// echo $response;
+curl_close($ch);
 
-if (curl_errno($ch)) {
+if ($response === false) {
     echo 'cURL Error: ' . curl_error($ch);
 } else {
     $responseArray = json_decode($response, true);
+    $html_entity = $responseArray['html'];
+    $html_content = html_entity_decode($html_entity);
+    $pattern = '/<div class="booknetic_service_card demo booknetic_fade" data-id="(\d+)"[^>]*>.*?<span class="booknetic_service_title_span">(.*?)<\/span>.*? <div class="booknetic_service_card_price " data-price="(.*?)">(.*?)<\/div>/s';
 
-    $htmlContent = $responseArray['html'];
-    $dom = new DOMDocument();
-    $dom->loadHTML($htmlContent);
-    
-    $xpath = new DOMXPath($dom);
+// Eşleşmeleri bul
+preg_match_all($pattern, $html_content, $matches, PREG_SET_ORDER);
 
-    $serviceCards = $xpath->query('//div[@class="booknetic_service_card"]');
-
-    foreach ($serviceCards as $serviceCard) {
-        $serviceName = $xpath->query('.//span[@class="booknetic_service_title_span"]', $serviceCard)->item(0)->nodeValue;
-        $servicePrice = $xpath->query('.//div[@class="booknetic_service_card_price"]', $serviceCard)->item(0)->nodeValue;
-        echo "Service Name: $serviceName, Price: $servicePrice\n";
-    }
+// Eşleşmeleri görüntüle
+foreach ($matches as $match) {
+    echo "data-id: " . $match[1] . "<br/>";
+    echo "Service Name: " . $match[2] . "<br/>";
+    echo "Price: " . $match[3] . "<br/>";
 }
 
-curl_close($ch);
 
+ 
+    
+}
