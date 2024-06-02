@@ -150,8 +150,8 @@ if ($text === '/start') {
             $bot->sendMessage("Reservation confirmed.\n
             Your reservation ID: {$res['id']}");
             $step->updateStep('finished');
-            unlink(STEP_PATH);
-            unlink(FILE_PATH);
+            // unlink(STEP_PATH);
+            // unlink(FILE_PATH);
         } else {
             $bot->sendMessage('Reservation not confirmed');
         }
