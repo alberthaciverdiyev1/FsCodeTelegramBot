@@ -1,1 +1,0 @@
-a:9:{s:10:"service_id";s:2:"13";s:4:"date";s:10:"2024-10-25";s:4:"step";s:4:"time";s:4:"time";s:5:"11:50";s:4:"name";s:2:"20";s:7:"surname";s:3:"ddd";s:5:"email";s:9:"dss@dd.dd";s:5:"phone";s:13:"+994709990569";s:12:"bring_people";s:1:"0";}
